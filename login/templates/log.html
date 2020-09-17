@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apartment 1453</title>
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {%load static%}
+    <link rel="stylesheet" href="{% static '/style.css' %}">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type='text/javascript'>
+        $(document).ready(function(){
+            $('button').hover(function(){
+                $(this).animate({'opacity': '1.7'}, 100);
+            }, function(){
+                $(this).animate({'opacity': '0.7'}, 100);
+            })
+        });
+    </script>
+</head>
+<body>
+    <div id="login">
+        <form action="/login" method=POST>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Name</label>
+                <input type="text" class="form-control" id="username" name='username'>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password"name='password'>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <div class='errors'>
+            <ul class="messages">    
+                {% for message in messages %}    
+                <li>{{ message }}</li>    
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

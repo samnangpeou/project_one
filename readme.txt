@@ -1,0 +1,1 @@
+I wasn't able to find a cool way to display the description for each. I wanted to make sure I had a finished product before I added any bells and whistles. Took me a little longer than I wanted and was able to get through the functional pieces. I will add a calendar to the reminders.

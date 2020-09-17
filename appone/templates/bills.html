@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bills</title>
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style2.css' %}">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div id="navbar">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-nav-demo" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                        </button>
+                    <a href="/home" class="navbar-brand"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> PEOU</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-nav-demo">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/home/tasks">Tasks</a></li>
+                        <li><a href="/home/bills">Bills</a></li>
+                        <li><a href="/home/reminders">Reminders</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/home/logout">Log Out <span class='glyphicon glyphicon-off'></span></a></li>
+                    </ul>
+                </div>	
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        <h1>Total: ${{total_bills.amount__sum}}</h1>
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Bill</button>
+        <div class="table">
+            <table class="table table-borderless table-dark">
+                <thead>
+                    <tr>
+                    <th scope="col">Collector</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Added by</th>
+                    <th scope='col'>Due Date</th>
+                    <th scope='col'>Added on</th>
+                    <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bill in unpaid reversed %}
+                    <tr>
+                    <th scope="row">{{bill.collector}}</th>
+                    <td>{{bill.amount}}</td>
+                    <td>{{bill.addedby.first_name}}</td>
+                    <td>{{bill.duedate}}</td>
+                    <td>{{bill.created_at|date:'M d, Y'}}</td>
+                    <td>
+                        <button><a href='/home/paybill/{{bill.id}}'>Pay</a></button>
+                        <button data-toggle="modal" data-target="#editModal{{bill.id}}">Edit</button>
+                        <button><a href="/home/deletebill/{{bill.id}}">Delete</a></button>
+                    </td>
+                    </tr>
+                    <div class="modal fade" id="editModal{{bill.id}}" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Edit Bill</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form action='/home/editbill/{{bill.id}}'method=POST>
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col">
+                                                Collector<input name='collector'type="text" class="form-control" placeholder="{{bill.collector}}" required>
+                                            </div>
+                                            <div class="col">
+                                                $<input name='amount'type="number" class="form-control" step=0.01 placeholder="{{bill.amount}}"required>
+                                            </div>
+                                            <div class="col">
+                                                Due Date<input name='duedate'type="date" class="form-control" placeholder="{{bill.duedate}}"required>
+                                            </div>
+                                        </div>
+                                        <div class='errors'>
+                                            <ul class="messages">    
+                                                {% for message in messages %}    
+                                                <li>{{ message }}</li>    
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Edit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="table">
+            <table class="table table-borderless table-dark">
+                <thead>
+                    <tr>
+                    <th scope="col">Collector</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Added by</th>
+                    <th scope='col'>Due Date</th>
+                    <th scope='col'>Added on</th>
+                    <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bill in paid reversed %}
+                    <tr>
+                    <th scope="row">{{bill.collector}}</th>
+                    <td>{{bill.amount}}</td>
+                    <td>{{bill.addedby.first_name}}</td>
+                    <td>{{bill.duedate}}</td>
+                    <td>{{bill.created_at|date:'M d, Y'}}</td>
+                    <td>Paid</td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <form action='/home/reminders'>
+            <button type="submit" type='submit'class="btn btn-secondary btn-lg btn-block">Next</button>
+        </form>
+        <form action="/home/tasks">
+            <button type="submit" class="btn btn-secondary btn-lg btn-block">Back</button>
+        </form>
+        <form action="/home">
+            <button type="submit" class="btn btn-secondary btn-lg btn-block">Home</button>
+        </form>
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Task</h4>
+                </div>
+                <div class="modal-body">
+                    <form action='/home/addbill'method=POST>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col">
+                                Collector<input name='collector'type="text" class="form-control" placeholder="Rent??" required>
+                            </div>
+                            <div class="col">
+                                $<input name='amount'type="number" class="form-control" step=0.01 placeholder="00.00"required>
+                            </div>
+                            <div class="col">
+                                Due Date<input name='duedate'type="date" class="form-control" placeholder="Due Date"required>
+                            </div>
+                        </div>
+                        <div class='errors'>
+                            <ul class="messages">    
+                                {% for message in messages %}    
+                                <li>{{ message }}</li>    
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

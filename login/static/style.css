@@ -1,0 +1,51 @@
+body {
+    background: url(/static/images/monsambackground.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#login {
+    display: inline-block;
+    background: #ffffff;
+    text-align: center;
+    position: absolute;
+    top: 100px;
+    right: 0;
+    opacity: .8;
+    margin: auto;
+    padding: 15px;
+    border-radius: 25px;
+    margin-right: 121px;
+    margin-top:172px;
+}
+    #login label {
+        font-weight: bold;
+    }
+    #login input {
+        border: 2px solid black;
+        text-align: center;
+        font-weight: bold;
+        border-radius: 10px;
+    }
+    #login .form-group {
+        background-color: white;
+    }
+    #login button.btn.btn-primary {
+        background-color: #faa998;
+        color: white;
+        padding: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        border-style: none;
+        border-radius: 10px;
+    }
+    #login .errors {
+        color:red;
+        text-align: center;
+    }
+        #login .errors ul {
+            list-style-type: none;
+            margin: 0;
+            padding:0;
+        }
